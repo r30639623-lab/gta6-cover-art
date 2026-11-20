@@ -1,0 +1,124 @@
+/* Coral Dusk Cover Studio — dark editor theme. All fonts are vendored
+   under app/fonts/ (SIL Open Font License); nothing loads from the web. */
+@font-face {
+  font-family: 'Anton';
+  src: url('./fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pacifico';
+  src: url('./fonts/Pacifico-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #14101c;
+  --panel: #1e1828;
+  --panel-2: #262033;
+  --line: #332b45;
+  --text: #f4f0fa;
+  --muted: #a99ec2;
+  --accent: #ff5e78;
+  --accent-2: #ffb347;
+  --accent-3: #22d3ee;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, sans-serif; }
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 12px 20px; border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, #2b1055, #7b2d8b 55%, #ff7e5f);
+}
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand-mark {
+  width: 40px; height: 40px; flex: none; display: grid; place-items: center;
+  font-family: 'Anton', sans-serif; font-size: 17px; letter-spacing: 1px;
+  color: #160a24; background: linear-gradient(135deg, #ffe9a8, #ff9a3d 60%, #ff5e78);
+  border-radius: 9px;
+}
+.topbar h1 { margin: 0; font-family: 'Anton', sans-serif; font-size: 21px; letter-spacing: 1.5px; text-transform: uppercase; }
+.tagline { margin: 0; color: rgba(255, 255, 255, 0.85); font-size: 12px; }
+.top-actions { display: flex; gap: 8px; flex: none; }
+
+.app { display: flex; gap: 20px; padding: 20px; align-items: flex-start; }
+.controls { width: 340px; flex: none; display: flex; flex-direction: column; gap: 14px; }
+.preview { flex: 1; min-width: 0; position: sticky; top: 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+.group { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.group h2 { margin: 0; font-family: 'Anton', sans-serif; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent-2); }
+.hint { margin: 0; color: var(--muted); font-size: 12px; }
+
+label { display: flex; flex-direction: column; gap: 6px; font-weight: 600; font-size: 13px; }
+input[type=text], textarea, select {
+  font: inherit; color: var(--text); background: var(--panel-2);
+  border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; width: 100%;
+}
+textarea { resize: vertical; }
+input[type=text]:focus, textarea:focus, select:focus { outline: 2px solid var(--accent-3); outline-offset: 1px; }
+
+button {
+  font: inherit; font-weight: 700; color: var(--text); background: var(--panel-2);
+  border: 1px solid var(--line); border-radius: 7px; padding: 9px 12px; cursor: pointer;
+}
+button:hover:not(:disabled) { border-color: var(--accent-3); }
+button:disabled { opacity: 0.4; cursor: default; }
+button.primary {
+  background: linear-gradient(135deg, #ff5e78, #ff9a3d); color: #160a24; border: 0; padding: 12px;
+}
+button.primary.alt { background: linear-gradient(135deg, #22d3ee, #c026d3); color: #fff; }
+button.active { border-color: var(--accent-2); background: #3a2b12; color: #ffe9a8; }
+
+.row { display: flex; gap: 8px; }
+.row button { flex: 1; }
+
+.upload input[type=file] { font: inherit; font-weight: 400; color: var(--muted); }
+.sample-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.sample-strip button { padding: 0; overflow: hidden; border-radius: 7px; }
+.sample-strip button.active { outline: 2px solid var(--accent-2); outline-offset: 1px; }
+.sample-strip img { display: block; width: 100%; height: 56px; object-fit: cover; }
+
+.choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.choice-grid button { padding: 9px 6px; font-size: 12px; }
+.choice-grid.grades button { color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); border: 1px solid rgba(255, 255, 255, 0.25); }
+.choice-grid.grades button.active { outline: 2px solid #fff; outline-offset: 1px; }
+
+.range-wrap { display: flex; align-items: center; gap: 10px; }
+.range-wrap input[type=range] { flex: 1; accent-color: var(--accent); }
+.range-wrap span { min-width: 44px; text-align: right; color: var(--muted); font-weight: 400; }
+
+.focus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 132px; }
+.focus-grid button { height: 26px; padding: 0; }
+
+.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+.toggles label { flex-direction: row; align-items: center; gap: 8px; font-weight: 400; }
+.toggles input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+#status { margin: 0; min-height: 18px; color: var(--accent-2); font-size: 12px; }
+
+#cover {
+  max-width: 100%; max-height: calc(100vh - 140px); width: auto; height: auto;
+  border-radius: 6px; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  cursor: grab; touch-action: none; background: #2b1055;
+}
+#cover:active { cursor: grabbing; }
+.preview-hint { margin: 0; color: var(--muted); font-size: 12px; }
+
+/* Screenshot scenes: the cover alone, edge to edge. */
+body.shot-cover { background: #000; }
+body.shot-cover .topbar, body.shot-cover .controls, body.shot-cover .preview-hint { display: none; }
+body.shot-cover .app { padding: 0; display: block; }
+body.shot-cover .preview { position: static; display: block; }
+body.shot-cover #cover { width: 100vw; height: 100vh; max-height: none; border-radius: 0; box-shadow: none; }
+
+@media (max-width: 900px) {
+  .app { flex-direction: column; }
+  .controls { width: 100%; }
+  .preview { position: static; width: 100%; }
+}
