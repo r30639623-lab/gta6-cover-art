@@ -22,9 +22,9 @@
   --line: #332b45;
   --text: #f4f0fa;
   --muted: #a99ec2;
-  --accent: #d9a441;
-  --accent-2: #e8c88a;
-  --accent-3: #c9a06a;
+  --accent: #ff5e78;
+  --accent-2: #ffb347;
+  --accent-3: #22d3ee;
   --radius: 10px;
 }
 
@@ -34,13 +34,13 @@ html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--te
 .topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 12px 20px; border-bottom: 1px solid var(--line);
-  background: linear-gradient(90deg, #17161c, #3a2f22 55%, #8a6a44);
+  background: linear-gradient(90deg, #2b1055, #7b2d8b 55%, #ff7e5f);
 }
 .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .brand-mark {
   width: 40px; height: 40px; flex: none; display: grid; place-items: center;
   font-family: 'Anton', sans-serif; font-size: 17px; letter-spacing: 1px;
-  color: #1c1408; background: linear-gradient(135deg, #f6ead2, #d9b380 60%, #b98d4f);
+  color: #160a24; background: linear-gradient(135deg, #ffe9a8, #ff9a3d 60%, #ff5e78);
   border-radius: 9px;
 }
 .topbar h1 { margin: 0; font-family: 'Anton', sans-serif; font-size: 21px; letter-spacing: 1.5px; text-transform: uppercase; }
@@ -70,9 +70,9 @@ button {
 button:hover:not(:disabled) { border-color: var(--accent-3); }
 button:disabled { opacity: 0.4; cursor: default; }
 button.primary {
-  background: linear-gradient(135deg, #d9b380, #b98d4f); color: #1c1408; border: 0; padding: 12px;
+  background: linear-gradient(135deg, #ff5e78, #ff9a3d); color: #160a24; border: 0; padding: 12px;
 }
-button.primary.alt { background: linear-gradient(135deg, #8a6a44, #5c4630); color: #f6ead2; }
+button.primary.alt { background: linear-gradient(135deg, #22d3ee, #c026d3); color: #fff; }
 button.active { border-color: var(--accent-2); background: #3a2b12; color: #ffe9a8; }
 
 .row { display: flex; gap: 8px; }
@@ -105,7 +105,7 @@ button.active { border-color: var(--accent-2); background: #3a2b12; color: #ffe9
 #cover {
   max-width: 100%; max-height: calc(100vh - 140px); width: auto; height: auto;
   border-radius: 6px; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
-  cursor: grab; touch-action: none; background: #17161c;
+  cursor: grab; touch-action: none; background: #2b1055;
 }
 #cover:active { cursor: grabbing; }
 .preview-hint { margin: 0; color: var(--muted); font-size: 12px; }

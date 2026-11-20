@@ -8,7 +8,7 @@
 
 A free, fully offline browser app that turns any photo and a caption
 into **GTA-style poster cover art** — the multi-panel look with bold
-chrome lettering and a sunset / neon colour grade — exported as a PNG
+chrome lettering and a neon sunset colour grade — exported as a PNG
 to share. No upload, no account, no network: every script, font and
 sample photo is a file in `app/`.
 
@@ -17,7 +17,7 @@ sample photo is a file in `app/`.
 1. Serve `app/` with any static server (`node serve.ts`, then open
    http://localhost:8080) or just open `app/index.html`.
 2. Add your own photos (up to 9) or use the 4 built-in samples.
-3. Pick one of 6 layouts, one of 7 colour grades, type the title,
+3. Pick one of 6 layouts, one of 6 colour grades, type the title,
    script subtitle and caption.
 4. Click a panel to select it, drag its photo to reposition it, use
    the zoom slider or a focus point to crop it.
@@ -28,21 +28,27 @@ sample photo is a file in `app/`.
 
 - **6 layouts** — 9-panel grid, Hero + 3, Hero + 5, Tilted Snapshots
   (polaroid frames), Slanted Panels, Full-Bleed Hero.
-- **7 grades** — Cinematic (the default: muted charcoal-bronze-ivory
-  prestige grade), Sunset, Neon Vice, Dusk, Teal Pink, Gold, Noir.
-  Each is a real gradient-map duotone applied per pixel on canvas,
-  then posterized. The loud neon grades were toned down in the
-  colour pass: the chrome title is now restrained silver-gold
-  (no rainbow), the subtitle glow is warm gold, and the ribbon
-  badge is deep crimson — so the covers read like a prestige
-  film poster, not a neon sign.
+- **6 grades** — Neon Vice (the default: deep violet, hot magenta,
+  cyan highlights), Sunset, Dusk, Teal Pink, Gold, Noir. Each is a
+  real gradient-map duotone applied per pixel on canvas, then
+  posterized in luminance first, so smooth skies posterize into
+  clean bands of the grade instead of blotchy off-hue patches.
+  The chrome title is a hard-banded rainbow (white, gold, pink,
+  sky blue, lilac), the subtitle glows neon pink, and the ribbon
+  badge is hot pink — so the covers read like a Vice City sunset,
+  not a muted film poster.
 - **Poster Ink** — faint halftone dots + posterize + a thick ink outline
   around every panel. The halftone is deliberately subtle so it reads
   as print texture, not a visible dot grid, and the ink border follows
-  the hero pop-out exactly, so a lifted panel looks like a card.
+  the hero pop-out exactly, so a lifted panel looks like a card. A
+  popped hero that would push edge content off the canvas is nudged
+  back inside on the left, so a raised arm stays in frame.
 - **Lettering** — a striped-chrome title with a 3D extrude (Anton,
   vendored under the SIL Open Font License), a neon script subtitle
   (Pacifico), an editable caption, and a movable title position.
+  The title scrim is kept light (0.42 peak over the bottom 36% of
+  the cover) so the faces in the bottom-row panels stay visible
+  under the lettering.
 - **Cast & credits** — role tags, a film-style billing block, a
   5-star heat meter and a corner ribbon badge.
 - **Per-panel crop** — drag to pan, zoom slider, 9-point focus;
@@ -51,7 +57,8 @@ sample photo is a file in `app/`.
   filling every panel; 4 original sample photos included.
 - **Fast export** — one click per size, or all four sizes at once.
 - **Undo / redo, grain + vignette toggles**, and a tidy dark editor
-  (controls left, live preview right).
+  (controls left, live preview right) in purple-magenta with
+  pink and cyan buttons.
 
 ## Originality
 

@@ -12,29 +12,23 @@ export const APP_NAME = 'Coral Dusk Cover Studio';
 // sky colours behind the panels and a faint wash tint over the cover.
 
 export const GRADES = {
-  cinema: {
-    label: 'Cinematic',
-    stops: [[0, '#0c0b10'], [0.3, '#2a2622'], [0.55, '#8a6a44'], [0.8, '#d9b380'], [1, '#f6ead2']],
-    sky: ['#17161c', '#4a3a28', '#c9a06a'],
-    wash: 'rgba(201, 160, 106, 0.06)',
-  },
   sunset: {
     label: 'Sunset',
-    stops: [[0, '#1a0b1e'], [0.3, '#5e2140'], [0.55, '#b04a52'], [0.8, '#d98a4a'], [1, '#f2d492']],
-    sky: ['#241026', '#8a3a4a', '#d99a6c'],
-    wash: 'rgba(190, 110, 70, 0.07)',
+    stops: [[0, '#160a2e'], [0.3, '#7b2d8b'], [0.55, '#e84a7f'], [0.8, '#ff9a3d'], [1, '#ffd76a']],
+    sky: ['#2b1055', '#ff7e5f', '#feb47b'],
+    wash: 'rgba(255, 110, 60, 0.08)',
   },
   neon: {
     label: 'Neon Vice',
-    stops: [[0, '#070218'], [0.3, '#1c0f4d'], [0.55, '#7a2a8f'], [0.8, '#3f7d9e'], [1, '#e8d5f2']],
-    sky: ['#0d0320', '#4a2a7a', '#a05a8f'],
-    wash: 'rgba(140, 60, 170, 0.06)',
+    stops: [[0, '#05021a'], [0.3, '#1b0a6e'], [0.55, '#c026d3'], [0.8, '#22d3ee'], [1, '#f5d0fe']],
+    sky: ['#0b0221', '#7c3aed', '#ec4899'],
+    wash: 'rgba(190, 40, 220, 0.08)',
   },
   dusk: {
     label: 'Dusk',
-    stops: [[0, '#0d0d20'], [0.35, '#2e2a55'], [0.6, '#6a5f8f'], [0.85, '#c9a8c4'], [1, '#f2e8ee']],
-    sky: ['#1a1836', '#4a3f6e', '#a08bb0'],
-    wash: 'rgba(100, 80, 160, 0.06)',
+    stops: [[0, '#0a0a24'], [0.35, '#3730a3'], [0.6, '#7c6bb3'], [0.85, '#e8b4d9'], [1, '#fdf2f8']],
+    sky: ['#1e1b4b', '#6d28d9', '#c084fc'],
+    wash: 'rgba(120, 90, 220, 0.08)',
   },
   teal: {
     label: 'Teal Pink',
@@ -173,10 +167,19 @@ export function gradeAndPosterize(imageData, gradeId, levels = 8) {
   const d = imageData.data;
   const step = 255 / (levels - 1);
   for (let i = 0; i < d.length; i += 4) {
+    // Quantize the luminance FIRST, then map through the grade: every
+    // pixel lands on one of the grade's own ramp colours, so a smooth
+    // sky posterizes into clean bands of the grade. The old order —
+    // map first, then round each channel on its own — pushed pixels
+    // off the ramp (one channel rounding up while another rounds down
+    // shifts the hue), which is what turned smooth skies into dirty
+    // green-brown blotches.
     const lum = Math.round(0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]);
-    d[i] = Math.round(lut[lum * 3] / step) * step;
-    d[i + 1] = Math.round(lut[lum * 3 + 1] / step) * step;
-    d[i + 2] = Math.round(lut[lum * 3 + 2] / step) * step;
+    const level = Math.min(levels - 1, Math.max(0, Math.round(lum / step)));
+    const q = Math.round(level * step);
+    d[i] = lut[q * 3];
+    d[i + 1] = lut[q * 3 + 1];
+    d[i + 2] = lut[q * 3 + 2];
   }
   return imageData;
 }
@@ -265,7 +268,24 @@ function drawPanel(ctx, img, panelPx, crop, gradeId, opts) {
   const drawW = innerW * pop;
   const drawH = innerH * pop;
   ctx.save();
-  ctx.translate(x + w / 2, y + h / 2);
+  // A popped hero card is drawn 12% larger than its slot, centred on
+  // it — so a hero slot flush with the canvas edge pushes the card's
+  // edge content off the canvas: in the square Hero + 3 cover the
+  // rooftop hero's raised arm sat within 3% of the photo's left edge
+  // and the pop-out cropped it at the frame. No crop or focus point
+  // can save it (cover-fit already shows the photo's full width, and
+  // the pop always hides the outer ~5% of the card), so nudge the
+  // popped card back inside on the left instead: the arm lands fully
+  // in frame, the border still follows the popped image, and the
+  // right side bleeds off the canvas, which reads as a normal poster
+  // bleed. Only the left edge is clamped — the card is allowed to
+  // bleed right and bottom as before.
+  let centreX = x + w / 2;
+  if (pop > 1) {
+    const overflowLeft = centreX - drawW / 2;
+    if (overflowLeft < 0) centreX -= overflowLeft;
+  }
+  ctx.translate(centreX, y + h / 2);
   if (panelPx.rot) ctx.rotate((panelPx.rot * Math.PI) / 180);
   if (panelPx.skew) ctx.transform(1, 0, panelPx.skew, 1, 0, 0);
   ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
@@ -328,17 +348,18 @@ export function drawChromeTitle(ctx, text, cx, cy, maxWidth, maxSize) {
   for (let i = 6; i >= 1; i--) {
     t.fillText(text, tx + (extrude * i) / 6, ty + (extrude * i) / 6);
   }
-  // Striped chrome fill: restrained silver-gold bands (no rainbow),
-  // so the title reads like a prestige film-poster masthead.
+  // Striped chrome fill: hard-banded vertical gradient.
   const grad = t.createLinearGradient(0, ty - size / 2, 0, ty + size / 2);
   grad.addColorStop(0, '#ffffff');
-  grad.addColorStop(0.24, '#f3e2b3');
-  grad.addColorStop(0.26, '#c9a06a');
-  grad.addColorStop(0.48, '#fdf6e3');
-  grad.addColorStop(0.5, '#d9b380');
-  grad.addColorStop(0.72, '#ffffff');
-  grad.addColorStop(0.74, '#e8d5a8');
-  grad.addColorStop(1, '#b98d4f');
+  grad.addColorStop(0.22, '#ffe9a8');
+  grad.addColorStop(0.24, '#ff9a3d');
+  grad.addColorStop(0.45, '#ff5e78');
+  grad.addColorStop(0.47, '#ffffff');
+  grad.addColorStop(0.62, '#7dd3fc');
+  grad.addColorStop(0.64, '#f0abfc');
+  grad.addColorStop(0.82, '#ffffff');
+  grad.addColorStop(0.84, '#ffd76a');
+  grad.addColorStop(1, '#ff7e5f');
   t.fillStyle = grad;
   t.fillText(text, tx, ty);
   // Diagonal shine stripes clipped to the letters.
@@ -410,7 +431,7 @@ export function drawRibbonBadge(ctx, text, w, size) {
   ctx.save();
   ctx.translate(w, 0);
   ctx.rotate(Math.PI / 4);
-  ctx.fillStyle = '#8c1d2f';
+  ctx.fillStyle = '#ff2e63';
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
   ctx.shadowBlur = size * 0.25;
   ctx.fillRect(-bandW / 2, d, bandW, bandH);
@@ -463,12 +484,19 @@ export function drawCover(canvas, state, photoMap) {
   // editable caption, cast tags and the film-style billing block. The
   // band is tall enough that the subtitle, caption, chips and billing
   // each get their own row and never sit on top of each other.
-  const bandH = H * (state.titlePos === 'middle' ? 0.34 : 0.4);
+  // The scrim used to peak at 0.62 over the bottom 40% of the cover,
+  // which buried the bottom-row panels: faces in the grid's bottom row
+  // and the Hero + 3 side panels were barely visible under it. The band
+  // is now shorter (0.36 of the height, so it starts lower, below most
+  // faces) and the peak is 0.42 — the title, subtitle and caption keep
+  // their own dark outlines and shadows, so they stay legible on the
+  // lighter scrim while the faces underneath show through.
+  const bandH = H * (state.titlePos === 'middle' ? 0.34 : 0.36);
   const bandY = state.titlePos === 'top' ? 0 : state.titlePos === 'middle' ? (H - bandH) / 2 : H - bandH;
   const scrim = ctx.createLinearGradient(0, bandY, 0, bandY + bandH);
   scrim.addColorStop(0, 'rgba(12, 5, 24, 0)');
-  scrim.addColorStop(0.35, 'rgba(12, 5, 24, 0.62)');
-  scrim.addColorStop(0.65, 'rgba(12, 5, 24, 0.62)');
+  scrim.addColorStop(0.35, 'rgba(12, 5, 24, 0.42)');
+  scrim.addColorStop(0.65, 'rgba(12, 5, 24, 0.42)');
   scrim.addColorStop(1, 'rgba(12, 5, 24, 0)');
   ctx.fillStyle = scrim;
   ctx.fillRect(0, bandY, W, bandH);
@@ -482,8 +510,8 @@ export function drawCover(canvas, state, photoMap) {
     ctx.textBaseline = 'middle';
     const subSize = fitFont(ctx, state.subtitle, W * 0.8, H * 0.052, 'Pacifico, cursive');
     ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = '#d9a441';
-    ctx.shadowBlur = H * 0.012;
+    ctx.shadowColor = '#ff2e9a';
+    ctx.shadowBlur = H * 0.02;
     ctx.fillText(state.subtitle, W / 2, bandY + bandH * 0.28 + titleSize * 0.62);
     ctx.fillText(state.subtitle, W / 2, bandY + bandH * 0.28 + titleSize * 0.62);
     ctx.restore();
@@ -559,9 +587,12 @@ export function drawCover(canvas, state, photoMap) {
     ctx.restore();
   }
   if (state.vignette) {
+    // The vignette used to end at 0.38, which darkened the corner faces
+    // in the bottom row on top of the title scrim; 0.28 keeps the frame
+    // while letting those faces read.
     const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.42, W / 2, H / 2, Math.max(W, H) * 0.75);
     vg.addColorStop(0, 'rgba(0,0,0,0)');
-    vg.addColorStop(1, 'rgba(0,0,0,0.38)');
+    vg.addColorStop(1, 'rgba(0,0,0,0.28)');
     ctx.fillStyle = vg;
     ctx.fillRect(0, 0, W, H);
   }
