@@ -32,7 +32,7 @@ export const GRADES = {
   },
   teal: {
     label: 'Teal Pink',
-    stops: [[0, '#04202b'], [0.3, '#0e7490'], [0.55, '#2dd4bf'], [0.8, '#f472b6'], [1, '#fdf2f8']],
+    stops: [[0, '#04202b'], [0.3, '#0e7490'], [0.55, '#63b3a6'], [0.8, '#f472b6'], [1, '#fdf2f8']],
     sky: ['#042f2e', '#0d9488', '#f9a8d4'],
     wash: 'rgba(45, 212, 191, 0.07)',
   },
@@ -162,7 +162,7 @@ export function gradeLookup(gradeId) {
 }
 
 /** Maps every pixel through the grade's gradient map, then posterizes it. */
-export function gradeAndPosterize(imageData, gradeId, levels = 6) {
+export function gradeAndPosterize(imageData, gradeId, levels = 8) {
   const lut = gradeLookup(gradeId);
   const d = imageData.data;
   const step = 255 / (levels - 1);
@@ -191,14 +191,15 @@ const grainTile = (() => {
   return c;
 })();
 
-// Halftone dot tile: a grid of dark dots, tiled over a panel.
+// Halftone dot tile: a sparse grid of small dark dots, tiled over a
+// panel. Kept deliberately faint — a print texture, not a visible grid.
 const halftoneTile = (() => {
   const c = document.createElement('canvas');
-  c.width = 9; c.height = 9;
+  c.width = 11; c.height = 11;
   const g = c.getContext('2d');
-  g.clearRect(0, 0, 9, 9);
+  g.clearRect(0, 0, 11, 11);
   g.fillStyle = '#000000';
-  g.beginPath(); g.arc(4.5, 4.5, 1.7, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.arc(5.5, 5.5, 1.15, 0, Math.PI * 2); g.fill();
   return c;
 })();
 
@@ -246,7 +247,7 @@ function drawPanel(ctx, img, panelPx, crop, gradeId, opts) {
     octx.fillRect(0, 0, off.width, off.height);
   }
   if (opts.halftone) {
-    octx.globalAlpha = 0.16;
+    octx.globalAlpha = 0.09;
     octx.globalCompositeOperation = 'multiply';
     octx.fillStyle = octx.createPattern(halftoneTile, 'repeat');
     octx.fillRect(0, 0, off.width, off.height);
@@ -276,13 +277,15 @@ function drawPanel(ctx, img, panelPx, crop, gradeId, opts) {
   ctx.shadowBlur = 0;
   ctx.shadowOffsetY = 0;
   if (opts.ink) {
+    // The border follows the image as drawn — including the hero pop-out
+    // — so a lifted panel reads as a deliberate card, not a bleed bug.
     const lw = Math.max(2, w * 0.006);
     ctx.lineWidth = lw;
     ctx.strokeStyle = '#0d0714';
-    ctx.strokeRect(-w / 2, -h / 2, w, h);
+    ctx.strokeRect(-drawW / 2, -drawH / 2, drawW, drawH);
     ctx.lineWidth = Math.max(1, lw * 0.35);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-    ctx.strokeRect(-w / 2 + lw, -h / 2 + lw, w - lw * 2, h - lw * 2);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+    ctx.strokeRect(-drawW / 2 + lw, -drawH / 2 + lw, drawW - lw * 2, drawH - lw * 2);
   }
   ctx.restore();
 }
@@ -394,11 +397,11 @@ export function drawHeatMeter(ctx, x, y, size, heat) {
 export function drawRibbonBadge(ctx, text, w, size) {
   if (!text.trim()) return;
   const bandH = size * 1.7;
-  const bandW = size * 9;
-  // The band is drawn in a frame rotated 45° about the corner, offset
-  // along the rotated y-axis so it crosses the top and right edges
-  // instead of sitting off-canvas.
-  const d = bandH * 1.1;
+  // Wide enough for the full badge text, and offset far enough along the
+  // corner diagonal that the whole band — text included — lands inside
+  // the canvas instead of sliding half off the top-right corner.
+  const bandW = size * 7.5;
+  const d = bandH * 2.2;
   ctx.save();
   ctx.translate(w, 0);
   ctx.rotate(Math.PI / 4);
@@ -476,8 +479,8 @@ export function drawCover(canvas, state, photoMap) {
     ctx.fillStyle = '#ffffff';
     ctx.shadowColor = '#ff2e9a';
     ctx.shadowBlur = H * 0.02;
-    ctx.fillText(state.subtitle, W / 2, bandY + bandH * 0.28 + titleSize * 0.55);
-    ctx.fillText(state.subtitle, W / 2, bandY + bandH * 0.28 + titleSize * 0.55);
+    ctx.fillText(state.subtitle, W / 2, bandY + bandH * 0.28 + titleSize * 0.62);
+    ctx.fillText(state.subtitle, W / 2, bandY + bandH * 0.28 + titleSize * 0.62);
     ctx.restore();
   }
 

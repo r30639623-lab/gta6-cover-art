@@ -31,8 +31,10 @@ sample photo is a file in `app/`.
 - **6 grades** — Sunset, Neon Vice, Dusk, Teal Pink, Gold, Noir.
   Each is a real gradient-map duotone applied per pixel on canvas,
   then posterized.
-- **Poster Ink** — halftone dots + posterize + a thick ink outline
-  around every panel.
+- **Poster Ink** — faint halftone dots + posterize + a thick ink outline
+  around every panel. The halftone is deliberately subtle so it reads
+  as print texture, not a visible dot grid, and the ink border follows
+  the hero pop-out exactly, so a lifted panel looks like a card.
 - **Lettering** — a striped-chrome title with a 3D extrude (Anton,
   vendored under the SIL Open Font License), a neon script subtitle
   (Pacifico), an editable caption, and a movable title position.
