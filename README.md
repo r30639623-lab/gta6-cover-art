@@ -17,7 +17,7 @@ sample photo is a file in `app/`.
 1. Serve `app/` with any static server (`node serve.ts`, then open
    http://localhost:8080) or just open `app/index.html`.
 2. Add your own photos (up to 9) or use the 4 built-in samples.
-3. Pick one of 6 layouts, one of 6 colour grades, type the title,
+3. Pick one of 6 layouts, one of 7 colour grades, type the title,
    script subtitle and caption.
 4. Click a panel to select it, drag its photo to reposition it, use
    the zoom slider or a focus point to crop it.
@@ -28,9 +28,14 @@ sample photo is a file in `app/`.
 
 - **6 layouts** — 9-panel grid, Hero + 3, Hero + 5, Tilted Snapshots
   (polaroid frames), Slanted Panels, Full-Bleed Hero.
-- **6 grades** — Sunset, Neon Vice, Dusk, Teal Pink, Gold, Noir.
+- **7 grades** — Cinematic (the default: muted charcoal-bronze-ivory
+  prestige grade), Sunset, Neon Vice, Dusk, Teal Pink, Gold, Noir.
   Each is a real gradient-map duotone applied per pixel on canvas,
-  then posterized.
+  then posterized. The loud neon grades were toned down in the
+  colour pass: the chrome title is now restrained silver-gold
+  (no rainbow), the subtitle glow is warm gold, and the ribbon
+  badge is deep crimson — so the covers read like a prestige
+  film poster, not a neon sign.
 - **Poster Ink** — faint halftone dots + posterize + a thick ink outline
   around every panel. The halftone is deliberately subtle so it reads
   as print texture, not a visible dot grid, and the ink border follows

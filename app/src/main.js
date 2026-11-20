@@ -22,7 +22,7 @@ export const ASPECTS = {
 
 const DEFAULT_STATE = {
   layout: 'hero3',
-  grade: 'sunset',
+  grade: 'cinema',
   aspect: 'landscape',
   title: 'CORAL DUSK',
   subtitle: 'Sunset Coast Nights',
