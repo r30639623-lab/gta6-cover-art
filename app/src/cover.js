@@ -265,23 +265,32 @@ function drawPanel(ctx, img, panelPx, crop, gradeId, opts) {
   }
 
   const pop = opts.popout && panelPx.hero ? 1.12 : 1;
-  const drawW = innerW * pop;
-  const drawH = innerH * pop;
+  // A popped card is 12% larger than its slot — but a slot flush with
+  // the canvas edge then pushes the card's edge content off the canvas:
+  // the rooftop hero's outstretched arm sat within 3% of the photo's
+  // edge, so the pop cropped it at the frame whichever way the card was
+  // nudged. Cap the pop so the card fits inside the canvas width
+  // instead: a full-width hero simply doesn't enlarge (its border and
+  // shadow still lift it), and both arms stay in frame. The nudge below
+  // remains as a fallback for rotated cards, which can still overhang
+  // an edge even at the capped size.
+  let cappedPop = pop;
+  if (cappedPop > 1 && opts.canvasW) {
+    cappedPop = Math.min(cappedPop, opts.canvasW / Math.max(1, innerW));
+  }
+  const drawW = innerW * cappedPop;
+  const drawH = innerH * cappedPop;
   ctx.save();
-  // A popped hero card is drawn 12% larger than its slot, centred on
-  // it — so a hero slot flush with the canvas edge pushes the card's
-  // edge content off the canvas: in the square Hero + 3 cover the
-  // rooftop hero's raised arm sat within 3% of the photo's left edge
-  // and the pop-out cropped it at the frame. No crop or focus point
-  // can save it (cover-fit already shows the photo's full width, and
-  // the pop always hides the outer ~5% of the card), so nudge the
-  // popped card back inside on the left instead: the arm lands fully
-  // in frame, the border still follows the popped image, and the
-  // right side bleeds off the canvas, which reads as a normal poster
-  // bleed. Only the left edge is clamped — the card is allowed to
-  // bleed right and bottom as before.
+  // A popped hero card is drawn larger than its slot, centred on it —
+  // so a hero slot flush with the canvas edge pushes the card's edge
+  // content off the canvas. The cap above already keeps a full-width
+  // card inside; this nudge only catches the leftover overhang of a
+  // rotated card: the arm lands fully in frame, the border still
+  // follows the popped image, and the right side bleeds off the canvas,
+  // which reads as a normal poster bleed. Only the left edge is
+  // clamped — the card is allowed to bleed right and bottom as before.
   let centreX = x + w / 2;
-  if (pop > 1) {
+  if (cappedPop > 1) {
     const overflowLeft = centreX - drawW / 2;
     if (overflowLeft < 0) centreX -= overflowLeft;
   }
@@ -473,7 +482,7 @@ export function drawCover(canvas, state, photoMap) {
     drawPanel(ctx, img, {
       x: panel.x * W, y: panel.y * H, w: panel.w * W, h: panel.h * H,
       rot: panel.rot, skew: panel.skew, hero: panel.hero, frame: panel.frame,
-    }, crop, state.grade, { halftone: state.halftone, ink: state.ink, popout: state.popout });
+    }, crop, state.grade, { halftone: state.halftone, ink: state.ink, popout: state.popout, canvasW: W });
   });
 
   // Warm wash over everything.

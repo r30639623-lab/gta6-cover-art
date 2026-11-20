@@ -37,6 +37,28 @@ export async function runShot(shot, query, api) {
     const first = SAMPLE_BY_NAME[query.get('photo')] ?? 's1';
     patch.panelPhotos[0] = first;
   }
+  if (query.get('crop')) {
+    // Per-photo focus/zoom for this shot only, e.g. crop=s2:0.39,0.42,1
+    // (photoId:cx,cy,zoom, ';'-separated). A crop is per photo, so it
+    // applies to every panel showing that photo in this shot. It cannot
+    // conjure content outside the photo: the rooftop sample's left arm
+    // already exits the photo's right edge, so no crop can show that
+    // hand — but shifting the window left puts the raised right hand
+    // whole in frame instead of clipping it at the panel's left edge.
+    const crops = {};
+    for (const id of SAMPLE_ORDER) crops[id] = { cx: 0.5, cy: 0.42, zoom: 1 };
+    for (const part of query.get('crop').split(';')) {
+      const [id, vals] = part.split(':');
+      if (!id || !vals) continue;
+      const [cx, cy, zoom] = vals.split(',').map(Number);
+      crops[id] = {
+        cx: Number.isFinite(cx) ? cx : 0.5,
+        cy: Number.isFinite(cy) ? cy : 0.42,
+        zoom: Number.isFinite(zoom) ? zoom : 1,
+      };
+    }
+    patch.crops = crops;
+  }
   if (shot === 'cover') {
     // Mark the scene before applying it, so the editor's preview render
     // never redraws over the cover canvas.

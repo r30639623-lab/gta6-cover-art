@@ -41,8 +41,14 @@ sample photo is a file in `app/`.
   around every panel. The halftone is deliberately subtle so it reads
   as print texture, not a visible dot grid, and the ink border follows
   the hero pop-out exactly, so a lifted panel looks like a card. A
-  popped hero that would push edge content off the canvas is nudged
-  back inside on the left, so a raised arm stays in frame.
+  popped hero is capped so its card fits inside the canvas width
+  (a full-width hero simply doesn't enlarge), and any leftover
+  overhang is nudged back inside on the left, so a raised arm stays
+  in frame.
+- **Per-shot crops** — the screenshot scenes (`?shot=`) accept a
+  `crop` parameter (`crop=s2:0.39,0.42,1`) that sets a photo's focus
+  point and zoom for that scene only, so a sample whose gesture sits
+  near the photo's edge can be framed with the hand whole.
 - **Lettering** — a striped-chrome title with a 3D extrude (Anton,
   vendored under the SIL Open Font License), a neon script subtitle
   (Pacifico), an editable caption, and a movable title position.
