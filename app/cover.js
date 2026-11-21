@@ -253,9 +253,12 @@
   function drawRibbon(ctx, W, H) {
     var text = 'DUSK';
     ctx.save();
-    ctx.translate(W - W * 0.02, H * 0.045);
+    // Ribbon centre pulled well inside the corner (0.90W, 0.05H) so the
+    // whole word stays on canvas: at 0.98W the last letter was clipped
+    // off the right edge. Band still bleeds off the corner, classic look.
+    ctx.translate(W * 0.90, H * 0.05);
     ctx.rotate(Math.PI / 4);
-    var bw = W * 0.34, bh = Math.max(26, H * 0.038);
+    var bw = W * 0.30, bh = Math.max(26, H * 0.038);
     ctx.fillStyle = '#ff2e63';
     ctx.fillRect(-bw / 2, -bh / 2, bw, bh);
     ctx.fillStyle = '#ffffff';
