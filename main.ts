@@ -1,48 +1,46 @@
-// Coral Dusk Cover Studio — the entry program for gta6-cover-art-01
-// (Node 22, standard library only).
+// Coral Dusk Cover Studio — entrypoint (main.ts, Node 22).
+// Hands the app in: copies app/ (the static studio) and screenshots/
+// (the renders) into the output directory, then writes dossier.json
+// with the kit's buildDossier library, byte for byte what the scorer
+// writes from the same directory.
 //
-// The app itself is plain static files under app/: app/index.html plus
-// its ES modules, vendored fonts and sample photos. It runs offline in
-// a desktop browser and turns a photo and a caption into a multi-panel
-// GTA-style poster cover, exported as a PNG.
-//
-// This program hands the entry in: it copies app/ and screenshots/
-// from beside this file into /output and writes /output/dossier.json
-// with buildDossier from vendor/makefun-app.ts, the kit's library,
-// which the scorer rebuilds and compares byte for byte.
-//
-// Run it locally with:
-//   mkdir -p /tmp/cover-out && MAKEFUN_OUTPUT_DIR=/tmp/cover-out node main.ts
-// Serve the app locally with `node serve.ts`, then open http://localhost:8080.
+// Usage: node main.ts [output-dir]   (default output dir is /output)
+import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildDossier } from "./vendor/makefun-app.ts";
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { buildDossier } from './vendor/makefun-app.ts';
+const here = path.dirname(fileURLToPath(import.meta.url));
+const outDir = path.resolve(process.argv[2] || "/output");
 
-const here = fileURLToPath(new URL('.', import.meta.url));
-const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+const appSrc = path.join(here, "app");
+const shotsSrc = path.join(here, "screenshots");
 
-mkdirSync(out, { recursive: true });
-cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
-mkdirSync(join(out, 'screenshots'), { recursive: true });
-if (existsSync(join(here, 'screenshots'))) {
-  cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
+if (!existsSync(appSrc)) {
+  console.error("missing app/ next to main.ts");
+  process.exit(1);
+}
+if (!existsSync(shotsSrc)) {
+  console.error("missing screenshots/ next to main.ts");
+  process.exit(1);
 }
 
-// The scorer's own caps (reference/gate.json): only text_max_bytes
-// shapes the bytes; the rest refuse an entry the scorer would refuse
-// (more than 4 screenshots or one over 256 KiB; more than 993 files
-// in app/ or 48 MiB of app files in all, or a path under app/ over
-// 1000 bytes: app/ counts beside /output's own 1000-entry cap, its
-// screenshots/ and dossier.json).
-writeFileSync(
-  join(out, 'dossier.json'),
-  buildDossier(out, {
-    text_max_bytes: 163840,
-    screenshots: { max: 4, max_bytes: 262144 },
-    app_max_files: 993,
-    app_max_bytes: 50331648,
-    app_path_max_bytes: 1000,
-  }),
-);
+// Start from a clean output directory so stale files never leak in.
+rmSync(outDir, { recursive: true, force: true });
+mkdirSync(outDir, { recursive: true });
+
+cpSync(appSrc, path.join(outDir, "app"), { recursive: true });
+cpSync(shotsSrc, path.join(outDir, "screenshots"), { recursive: true });
+
+// The dossier must equal what buildDossier writes from this directory,
+// so write it last, from the finished tree.
+const dossier = buildDossier(outDir, {
+  text_max_bytes: 163840,
+  screenshots: { max: 4, max_bytes: 262144 },
+  app_max_files: 993,
+  app_max_bytes: 50331648,
+});
+writeFileSync(path.join(outDir, "dossier.json"), dossier);
+
+console.log(`Coral Dusk Cover Studio handed in to ${outDir}`);
+console.log(`dossier.json: ${dossier.length} bytes`);
