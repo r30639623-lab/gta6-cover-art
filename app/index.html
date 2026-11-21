@@ -1,91 +1,72 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Coral Dusk Cover Studio</title>
+<title>Coral Dusk Cover Studio — Coral Coast</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="topbar">
   <div class="brand">
-    <span class="logo">CD</span>
+    <span class="brand-mark">CD</span>
     <div>
-      <h1>CORAL DUSK COVER STUDIO</h1>
-      <p>Any photo. One caption. A poster cover, in seconds.</p>
+      <h1>Coral Dusk <span>Cover Studio</span></h1>
+      <p class="tagline">Kota fiktif Coral Coast &middot; Mara &middot; Dante &middot; Sofia</p>
     </div>
   </div>
   <div class="top-actions">
-    <button id="undoBtn" type="button">Undo</button>
-    <button id="redoBtn" type="button">Redo</button>
-    <button id="resetBtn" type="button" class="dark">Reset</button>
+    <label class="upload-btn" for="upload">+ Unggah foto (maks 9)</label>
+    <input id="upload" type="file" accept="image/*" multiple hidden>
   </div>
 </header>
 
 <main class="studio">
   <aside class="panel">
     <section>
-      <h2>1 · Photos</h2>
-      <label class="field-label">Add your photos (up to 9)</label>
-      <input id="fileInput" type="file" accept="image/*" multiple>
-      <p class="hint">Or tap a sample — it fills the selected panel.</p>
-      <div id="thumbs" class="thumbs"></div>
-      <div class="row2">
-        <button id="oneEverywhere" type="button">One photo everywhere</button>
-        <button id="dealPhotos" type="button">Deal photos across panels</button>
-      </div>
+      <h2>Layout poster</h2>
+      <div id="layouts" class="chips"></div>
     </section>
-
     <section>
-      <h2>2 · Layout</h2>
-      <div id="layouts" class="grid3"></div>
+      <h2>Color grade</h2>
+      <div id="grades" class="swatches"></div>
+      <p class="hint">Grade default: Neon Vice &mdash; pita #ff2e63, subtitle glow #ff2e9a.</p>
     </section>
-
     <section>
-      <h2>3 · Colour grade</h2>
-      <div id="grades" class="grid3"></div>
+      <h2>Teks cover</h2>
+      <label>Judul
+        <input id="title-input" type="text" value="CORAL COAST" maxlength="24">
+      </label>
+      <label>Subtitle
+        <input id="subtitle-input" type="text" value="Coral Dusk" maxlength="32">
+      </label>
+      <label>Kredit
+        <input id="credits-input" type="text" value="MARA &bull; DANTE &bull; SOFIA" maxlength="48">
+      </label>
     </section>
-
     <section>
-      <h2>4 · Caption</h2>
-      <label class="field-label">Title</label>
-      <input id="titleInput" type="text" value="CORAL DUSK" maxlength="24">
-      <label class="field-label">Subtitle</label>
-      <input id="subtitleInput" type="text" value="Sunset Coast Nights" maxlength="40">
-      <label class="field-label">Tagline</label>
-      <input id="taglineInput" type="text" value="NEON NIGHTS" maxlength="24">
-      <label class="field-label">Cast — name, role (one per line)</label>
-      <textarea id="castInput" rows="3">Mara — Driver
-Dante — The Fixer
-Sofia — The Boss</textarea>
+      <h2>Foto sampel</h2>
+      <div id="photos" class="photo-grid"></div>
+      <p class="hint">Foto sampel berlisensi bebas (CC0 / CC BY) dari Openverse &amp; Wikimedia Commons. Klik + Unggah untuk memakai fotomu sendiri.</p>
     </section>
-
     <section>
-      <h2>5 · Export</h2>
-      <div class="row2">
-        <button id="dlPoster" type="button">Poster 2:3 · PNG</button>
-        <button id="dlSquare" type="button">Square 1:1 · PNG</button>
-        <button id="dlWide" type="button">Wide 16:9 · PNG</button>
-        <button id="dlStory" type="button">Story 4:5 · PNG</button>
-      </div>
-      <p class="hint">Exports render the same poster at print size. Original photos stay on your device.</p>
+      <h2>Export PNG</h2>
+      <div id="exports" class="exports"></div>
     </section>
   </aside>
 
-  <section class="stage">
-    <div class="canvas-wrap">
-      <canvas id="poster" width="1024" height="1536"></canvas>
-    </div>
-    <p class="stage-hint">Click a panel to select it, then drag to reposition its photo.</p>
-    <p class="stage-status" id="statusLine">Ready.</p>
+  <section class="stage-wrap">
+    <canvas id="stage" width="900" height="1125"></canvas>
+    <p id="status" class="status">Memuat&hellip;</p>
   </section>
 </main>
 
-<footer class="foot">
-  <span>Coral Dusk Studio — a fictional sunset-coast story. No real studio, film or game is affiliated.</span>
-  <span>Sample photos: CC via Openverse / Flickr.</span>
+<footer class="credits">
+  <p>Coral Dusk Cover Studio &mdash; karya orisinal untuk bounty make.fun &ldquo;Make GTA 6 Cover Art&rdquo;. Semua nama, kota, dan tokoh adalah fiktif; tidak memakai nama, logo, atau aset Rockstar Games.</p>
+  <p>Foto: NYC skyline &copy; Joseph Barrientos (CC0) &middot; Parque Central, Havana &copy; Edgardo W. Olivera (CC BY 2.0) &middot; Potret wanita &copy; Thomas Leuthard (CC BY 2.0) &middot; Pria berjas &copy; conorwithonen (CC BY 2.0). Font: Anton &amp; Pacifico (SIL Open Font License).</p>
 </footer>
 
-<script type="module" src="app.js"></script>
+<script src="cover.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

@@ -1,64 +1,45 @@
-[![GTA 6 Cover Art — make.fun](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01)
-[![Rank](https://make.fun/badge/gta6-cover-art-01/r30639623-lab/gta6-cover-art/rank.svg)](https://make.fun/bounty/gta6-cover-art-01)
-[![Reward](https://make.fun/badge/gta6-cover-art-01/r30639623-lab/gta6-cover-art/reward.svg)](https://make.fun/bounty/gta6-cover-art-01)
-
 # Coral Dusk Cover Studio
 
-Turn any photo into a sunset-coast poster cover — a working studio app, not
-just one image. Built for the [GTA 6 Cover Art bounty](https://make.fun/bounty/gta6-cover-art-01)
-on make.fun.
+[![make.fun](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01)
+[![rank](https://make.fun/badge/gta6-cover-art-01/r30639623-lab/gta6-cover-art/rank.svg)](https://make.fun/bounty/gta6-cover-art-01)
+[![reward](https://make.fun/badge/gta6-cover-art-01/r30639623-lab/gta6-cover-art/reward.svg)](https://make.fun/bounty/gta6-cover-art-01)
 
-## What it does
-
-- **6 poster layouts** — 9-Panel Grid, Hero + 3, Hero + 5, Tilted Snapshots,
-  Slanted Panels, Full-Bleed Hero.
-- **7 colour grades** — Neon Vice (default), Sunset, Gold, Teal Pink, Dusk,
-  Coral, Noir. Photos are posterized first (luminance is quantized before
-  the grade lookup), so skies stay clean instead of going muddy.
-- **Up to 9 photos** — drop in your own, or tap one of the four included
-  sample photos. Click a panel to select it, drag to reposition its photo.
-- **Caption** — title, script subtitle, tagline and a three-person cast.
-- **Export PNG in 4 sizes** — Poster 2:3, Square 1:1, Wide 16:9, Story 4:5.
-
-The story is fictional: the city is **Coral Coast**, the cast is Mara Voss
-(the driver), Dante Ruiz (the fixer) and Sofia Lane (the boss). No real
-studio, film or game is affiliated, and no third-party game art, names or
-logos are used.
+A cover-art studio app for the fictional city **Coral Coast**, built for the
+[make.fun bounty "Make GTA 6 Cover Art"](https://make.fun/bounty/gta6-cover-art-01).
+Design a poster for Mara, Dante and Sofia: pick one of 6 layouts, one of 7
+colour grades, use the 4 sample photos or upload up to 9 of your own, then
+export the finished cover as PNG in 4 sizes.
 
 ## Run it
 
 ```sh
-node main.ts            # hands the app in to /output (dossier.json included)
-node main.ts ./out      # same, to a directory of your choice
+node main.ts            # copies app/ + screenshots/ into ./dist and writes dossier.json
 ```
 
-To try the studio in a browser while developing, serve `app/` with any
-static server, for example:
+Or open `app/index.html` directly in a browser (serve the folder over HTTP
+for the sample photos and fonts to load).
 
-```sh
-python3 -m http.server 4177 --directory app
-# open http://localhost:4177/
-```
+## What it does
 
-## Layout
+- **6 poster layouts** — Magazine, Hero Stack, Triptych, Duo Split, Grid Four, Strip Story
+- **7 colour grades** — Neon Vice (default), Coral Dusk, Dusk, Vice, Mono, Gold Hour, Teal Night
+- **Photo grading** — luminance is quantised before the grade lookup, so
+  smooth dusk skies grade into clean steps instead of muddy blotches, and a
+  seeded grain pass breaks up any remaining banding
+- **Safe crops** — portrait panels pop out at 1.08x, the wide hero stays at
+  1.0x, and heads and feet are clamped inside the frame
+- **Export PNG** — Poster 1080&times;1350, Square 1080&times;1080, Wide 1920&times;1080, Story 1080&times;1920
 
-- `main.ts` — entrypoint: copies `app/` + `screenshots/` to the output
-  directory and writes `dossier.json` with the kit's `buildDossier`.
-- `app/` — the studio itself (`index.html`, `app.js`, `cover.js`,
-  `style.css`, fonts and sample photos). Works offline.
-- `app/cover.js` — the poster renderer: layouts, grades, posterize pass,
-  halftone texture, title and credits layer.
-- `vendor/makefun-app.ts` — the kit's dossier library, copied unchanged.
-- `screenshots/` — renders of the app (see `shots.json`).
-- `shots.js` — re-shoots the screenshots with headless Chromium.
+## Sample photos (all freely licensed)
 
-## Sample photos
+- NYC skyline at dusk &mdash; Joseph Barrientos (CC0)
+- Parque Central, Havana &mdash; Edgardo W. Olivera (CC BY 2.0)
+- Street portrait &mdash; Thomas Leuthard (CC BY 2.0)
+- Man in a trench coat &mdash; conorwithonen (CC BY 2.0)
 
-The four sample photos are Creative Commons photos found via Openverse
-(Flickr): a pier jump at sunset, a Miami boulevard at night, a classic
-convertible, and palm trees at dusk. The fonts are Anton and Pacifico
-(SIL Open Font License).
+Fonts: Anton and Pacifico (SIL Open Font License 1.1).
 
-## License
+## Originality
 
-MIT — see [LICENSE](LICENSE).
+Every name, the city and the characters are fictional. No Rockstar Games
+names, logos or assets are used anywhere in this entry.
