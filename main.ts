@@ -1,41 +1,49 @@
-// Coral Dusk Cover Studio — entrypoint (gta6-cover-art-01).
-// Hands the built app in: copies app/ and screenshots/ from this repository
-// into the output directory, then writes /output/dossier.json with the kit's
-// buildDossier so the scorer can rebuild the same dossier byte for byte.
+// Duskline Cover Studio — a gta6-cover-art-01 entry (Node 22, standard library
+// only). The app is this directory's app/ folder: plain static files a desktop
+// browser loads offline (app/index.html and its ES modules, no library, no
+// network request). This program hands it in: it copies app/ and screenshots/
+// from beside this file to /output and writes /output/dossier.json, the
+// summary the judge reads, with the vendored make.fun library.
+//
+// The app turns your photos into framed crime-epic key art: six layouts,
+// seven grades, face-aware crops that keep every face whole inside its
+// frame, a striped title, a neon script subtitle, a ribbon, a quote bar, a
+// festival seal, a barcode and a billing block — and exports PNG in 1:1,
+// 4:5 and 16:9. Its six sample photos (app/samples/) were made for this
+// entry with an image model and are free to use; the two display fonts are
+// Anton and Yellowtail under the SIL Open Font License (see app/fonts/).
+//
+// Serve it locally with `node serve.ts`, then open http://localhost:8080.
+// Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
+//   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
 import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-app.ts';
 
-const REPO_ROOT = dirname(fileURLToPath(import.meta.url));
-const OUT_DIR = process.env.MAKEFUN_OUTPUT_DIR || '/output';
+const here = fileURLToPath(new URL('.', import.meta.url));
+const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
-const CAPS = {
-  text_max_bytes: 163840,
-  screenshots: { max: 4, max_bytes: 262144 },
-  app_max_files: 993,
-  app_max_bytes: 48 * 1024 * 1024,
-  app_path_max_bytes: 1000
-};
-
-function main(): void {
-  const appDir = join(REPO_ROOT, 'app');
-  const shotsDir = join(REPO_ROOT, 'screenshots');
-  if (!existsSync(appDir)) throw new Error('missing app/ in ' + REPO_ROOT);
-  if (!existsSync(shotsDir)) throw new Error('missing screenshots/ in ' + REPO_ROOT);
-  mkdirSync(OUT_DIR, { recursive: true });
-  cpSync(appDir, join(OUT_DIR, 'app'), { recursive: true });
-  cpSync(shotsDir, join(OUT_DIR, 'screenshots'), { recursive: true });
-  const dossier = buildDossier(OUT_DIR, CAPS);
-  writeFileSync(join(OUT_DIR, 'dossier.json'), dossier);
-  const names = ['1-cover.jpg', '2-editor.jpg', '3-cover.jpg', '4-cover-square.jpg'];
-  console.log('Coral Dusk Cover Studio handed in:');
-  console.log('  output: ' + OUT_DIR);
-  console.log('  dossier: ' + dossier.length + ' bytes');
-  for (const name of names) {
-    console.log('  screenshot: ' + name);
-  }
+mkdirSync(out, { recursive: true });
+cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
+mkdirSync(join(out, 'screenshots'), { recursive: true });
+if (existsSync(join(here, 'screenshots'))) {
+  cpSync(join(here, 'screenshots'), join(out, 'screenshots'), { recursive: true });
 }
 
-main();
+// The scorer's own caps (reference/gate.json): only text_max_bytes shapes the
+// bytes; the others refuse an entry the scorer would refuse (more than 4
+// screenshots or one over 256 KiB; more than 993 files in app/ or 48 MiB of
+// app files, in all, or a path under app/ over 1000 bytes: app/ counts beside
+// /output's own 1000-entry cap, its screenshots/ and dossier.json).
+writeFileSync(
+  join(out, 'dossier.json'),
+  buildDossier(out, {
+    text_max_bytes: 163840,
+    screenshots: { max: 4, max_bytes: 262144 },
+    app_max_files: 993,
+    app_max_bytes: 50331648,
+    app_path_max_bytes: 1000,
+  }),
+);
