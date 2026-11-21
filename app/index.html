@@ -3,69 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Coral Dusk Cover Studio — Coral Coast</title>
+<title>Coral Dusk Cover Studio</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-mark">CD</span>
-    <div>
-      <h1>Coral Dusk <span>Cover Studio</span></h1>
-      <p class="tagline">Kota fiktif Coral Coast &middot; Mara &middot; Dante &middot; Sofia</p>
+<div class="editor-ui">
+  <header class="topbar">
+    <div class="brand"><span class="logo">CD</span>
+      <div>
+        <h1>Coral Dusk <span>Cover Studio</span></h1>
+        <p>Kota fiktif Coral Coast · Mara · Dante · Sofia</p>
+      </div>
     </div>
+    <label class="upload-btn">+ Unggah foto (maks 9)
+      <input type="file" id="uploadInput" accept="image/*" multiple hidden>
+    </label>
+  </header>
+
+  <div class="workspace">
+    <aside class="controls">
+      <section>
+        <h2>Layout Poster</h2>
+        <div id="layoutBtns" class="btn-row"></div>
+      </section>
+      <section>
+        <h2>Color Grade</h2>
+        <div id="gradeSwatches" class="btn-row"></div>
+        <p class="note">Grade default: Neon Vice.</p>
+      </section>
+      <section>
+        <h2>Teks Cover</h2>
+        <label>Judul<input id="titleInput" type="text" value="CORAL COAST"></label>
+        <label>Subtitle<input id="subtitleInput" type="text" value="Coral Dusk"></label>
+        <label>Kredit<input id="creditInput" type="text" value="MARA • DANTE • SOFIA"></label>
+      </section>
+      <section>
+        <h2>Foto Sampel</h2>
+        <div id="photoList" class="photo-grid"></div>
+        <p class="note">Klik foto untuk panel yang dipilih.</p>
+      </section>
+      <section>
+        <h2>Panel &amp; Crop</h2>
+        <label>Panel
+          <select id="panelSelect"></select>
+        </label>
+        <label>Geser horizontal <input id="focusX" type="range" min="0" max="1" step="0.01" value="0.5"></label>
+        <label>Geser vertikal <input id="focusY" type="range" min="0" max="1" step="0.01" value="0.5"></label>
+        <label>Zoom <input id="zoomRange" type="range" min="1" max="1.3" step="0.01" value="1"></label>
+      </section>
+      <section>
+        <h2>Export PNG</h2>
+        <div id="exportBtns" class="btn-row"></div>
+      </section>
+    </aside>
+
+    <main class="preview" id="stageWrap">
+      <canvas id="stage" width="520" height="650"></canvas>
+      <p id="hint" class="hint">Siap — 6 layout, 7 grade, 4 foto sampel.</p>
+    </main>
   </div>
-  <div class="top-actions">
-    <label class="upload-btn" for="upload">+ Unggah foto (maks 9)</label>
-    <input id="upload" type="file" accept="image/*" multiple hidden>
-  </div>
-</header>
 
-<main class="studio">
-  <aside class="panel">
-    <section>
-      <h2>Layout poster</h2>
-      <div id="layouts" class="chips"></div>
-    </section>
-    <section>
-      <h2>Color grade</h2>
-      <div id="grades" class="swatches"></div>
-      <p class="hint">Grade default: Neon Vice &mdash; pita #ff2e63, subtitle glow #ff2e9a.</p>
-    </section>
-    <section>
-      <h2>Teks cover</h2>
-      <label>Judul
-        <input id="title-input" type="text" value="CORAL COAST" maxlength="24">
-      </label>
-      <label>Subtitle
-        <input id="subtitle-input" type="text" value="Coral Dusk" maxlength="32">
-      </label>
-      <label>Kredit
-        <input id="credits-input" type="text" value="MARA &bull; DANTE &bull; SOFIA" maxlength="48">
-      </label>
-    </section>
-    <section>
-      <h2>Foto sampel</h2>
-      <div id="photos" class="photo-grid"></div>
-      <p class="hint">Foto sampel berlisensi bebas (CC0 / CC BY) dari Openverse &amp; Wikimedia Commons. Klik + Unggah untuk memakai fotomu sendiri.</p>
-    </section>
-    <section>
-      <h2>Export PNG</h2>
-      <div id="exports" class="exports"></div>
-    </section>
-  </aside>
-
-  <section class="stage-wrap">
-    <canvas id="stage" width="900" height="1125"></canvas>
-    <p id="status" class="status">Memuat&hellip;</p>
-  </section>
-</main>
-
-<footer class="credits">
-  <p>Coral Dusk Cover Studio &mdash; karya orisinal untuk bounty make.fun &ldquo;Make GTA 6 Cover Art&rdquo;. Semua nama, kota, dan tokoh adalah fiktif; tidak memakai nama, logo, atau aset Rockstar Games.</p>
-  <p>Foto: NYC skyline &copy; Joseph Barrientos (CC0) &middot; Parque Central, Havana &copy; Edgardo W. Olivera (CC BY 2.0) &middot; Potret wanita &copy; orange tuesday (CC BY 2.0) &middot; Pria berjas &copy; sidewalk flying (CC BY 2.0). Font: Anton &amp; Pacifico (SIL Open Font License).</p>
-</footer>
-
+  <footer class="credits">
+    <p>Foto sampel (CC): Skyline — thenails (CC BY 2.0) · Plaza — Jorge Lascar (CC BY 2.0) · Mara — orange tuesday (CC BY 2.0) · Dante — sidewalk flying (CC BY 2.0). Font Anton &amp; Pacifico (SIL Open Font License). Semua foto dibaca di mesinmu sendiri, tidak pernah diunggah.</p>
+  </footer>
+</div>
 <script src="cover.js"></script>
 <script src="app.js"></script>
 </body>

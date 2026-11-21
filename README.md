@@ -4,44 +4,42 @@
 [![rank](https://make.fun/badge/gta6-cover-art-01/r30639623-lab/gta6-cover-art/rank.svg)](https://make.fun/bounty/gta6-cover-art-01)
 [![reward](https://make.fun/badge/gta6-cover-art-01/r30639623-lab/gta6-cover-art/reward.svg)](https://make.fun/bounty/gta6-cover-art-01)
 
-A cover-art studio app for the fictional city **Coral Coast**, built for the
-[make.fun bounty "Make GTA 6 Cover Art"](https://make.fun/bounty/gta6-cover-art-01).
-Design a poster for Mara, Dante and Sofia: pick one of 6 layouts, one of 7
-colour grades, use the 4 sample photos or upload up to 9 of your own, then
-export the finished cover as PNG in 4 sizes.
-
-## Run it
-
-```sh
-node main.ts            # copies app/ + screenshots/ into ./dist and writes dossier.json
-```
-
-Or open `app/index.html` directly in a browser (serve the folder over HTTP
-for the sample photos and fonts to load).
+An offline browser web app that turns your photos and a caption into GTA 6-style cover art — the iconic multi-panel poster and loading-screen look with a Vice City neon-sunset grade — exported as a PNG to share. Built for the [make.fun GTA 6 Cover Art bounty](https://make.fun/bounty/gta6-cover-art-01).
 
 ## What it does
 
-- **6 poster layouts** — Magazine, Hero Stack, Triptych, Duo Split, Grid Four, Strip Story
-- **7 colour grades** — Neon Vice (default), Coral Dusk, Dusk, Vice, Mono, Gold Hour, Teal Night
-- **Photo grading** — luminance is quantised before the grade lookup, so
-  smooth dusk skies grade into clean steps instead of muddy blotches, and a
-  seeded grain pass breaks up any remaining banding
-- **Safe crops** — portrait panels pop out at 1.08x, the wide hero stays at
-  1.0x, and heads and feet are clamped inside the frame; the narrow
-  triptych panels render at 1.0x with the focus centred on the subject,
-  so a whole face and a whole body fit inside the thin slice
-- **Export PNG** — Poster 1080&times;1350, Square 1080&times;1080, Wide 1920&times;1080, Story 1080&times;1920
+- **6 poster layouts** — Magazine, Hero Stack, Triptych, Duo Split, Grid Four, Strip Story.
+- **7 colour grades** — Neon Vice (default), Coral Dusk, Dusk, Vice, Mono, Gold Hour, Teal Night. Grades posterize luminance first, so skies band cleanly instead of turning muddy.
+- **Any photo** — upload up to 9 of your own photos, or use the 4 included samples. Crop and position each panel with focus and zoom sliders; wide heroes never cut feet, portrait panels pop out slightly.
+- **Bold lettering** — Anton title, Pacifico neon subtitle, letterspaced credit line, and a tilted "DUSK" ribbon.
+- **Fast export** — one click to PNG in 1080 × 1080, 1080 × 1350, 1920 × 1080, or 1080 × 1920.
+- **Fully offline** — static files under `app/`, no network requests. Photos never leave your machine.
 
-## Sample photos (all freely licensed)
+## Run it
 
-- NYC skyline at dusk &mdash; Joseph Barrientos (CC0)
-- Parque Central, Havana &mdash; Edgardo W. Olivera (CC BY 2.0)
-- Street portrait &mdash; orange tuesday (CC BY 2.0)
-- Man in a tan suit, Rome &mdash; sidewalk flying (CC BY 2.0)
+Serve `app/` with any static server and open `index.html` in desktop Chrome:
 
-Fonts: Anton and Pacifico (SIL Open Font License 1.1).
+```sh
+python3 -m http.server --directory app 8000
+```
 
-## Originality
+Or run the screenshot suite (needs headless Chromium + Pillow):
 
-Every name, the city and the characters are fictional. No Rockstar Games
-names, logos or assets are used anywhere in this entry.
+```sh
+node shots.js
+```
+
+`main.ts` hands the app in for the bounty: it copies `app/` and `screenshots/` to the output directory and writes `dossier.json` with the kit's `buildDossier`.
+
+## The fictional city
+
+Coral Coast is invented for this app, with cast Mara, Dante and Sofia. No Rockstar Games logo, artwork, character or font is used anywhere.
+
+## Credits
+
+- Photos (CC BY 2.0, via Openverse/Flickr): "New York Skyline Sunset 2" by thenails · "Plaza de Cibeles" by Jorge Lascar · "Tribe woman, India" by orange tuesday · "Awesome dude, Rome" by sidewalk flying.
+- Fonts Anton and Pacifico under the SIL Open Font License.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
