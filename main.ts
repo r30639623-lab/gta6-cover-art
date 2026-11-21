@@ -29,8 +29,8 @@ const DOSSIER = {
   photos: [
     { file: "photos/1-skyline.jpg", label: "Skyline — hero", credit: "Joseph Barrientos (CC0)" },
     { file: "photos/2-plaza.jpg", label: "Plaza — boulevard", credit: "Edgardo W. Olivera (CC BY 2.0)" },
-    { file: "photos/3-mara.jpg", label: "Mara — portrait", credit: "Thomas Leuthard (CC BY 2.0)" },
-    { file: "photos/4-dante.jpg", label: "Dante — portrait", credit: "conorwithonen (CC BY 2.0)" }
+    { file: "photos/3-mara.jpg", label: "Mara — portrait", credit: "orange tuesday (CC BY 2.0)" },
+    { file: "photos/4-dante.jpg", label: "Dante — portrait", credit: "sidewalk flying (CC BY 2.0)" }
   ],
   fonts: [
     { file: "fonts/Anton-Regular.ttf", license: "SIL Open Font License 1.1" },

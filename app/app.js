@@ -10,8 +10,8 @@
   var SAMPLES = [
     { key: 'hero',  src: 'photos/1-skyline.jpg', label: 'Skyline — hero',  credit: 'Joseph Barrientos (CC0)' },
     { key: 'plaza', src: 'photos/2-plaza.jpg',   label: 'Plaza — boulevard', credit: 'Edgardo W. Olivera (CC BY 2.0)' },
-    { key: 'mara',  src: 'photos/3-mara.jpg',   label: 'Mara — portrait', credit: 'Thomas Leuthard (CC BY 2.0)' },
-    { key: 'dante', src: 'photos/4-dante.jpg',  label: 'Dante — portrait', credit: 'conorwithonen (CC BY 2.0)' }
+    { key: 'mara',  src: 'photos/3-mara.jpg',   label: 'Mara — portrait', credit: 'orange tuesday (CC BY 2.0)' },
+    { key: 'dante', src: 'photos/4-dante.jpg',  label: 'Dante — portrait', credit: 'sidewalk flying (CC BY 2.0)' }
   ];
 
   var EXPORT_SIZES = [
@@ -34,6 +34,10 @@
 
   var params = new URLSearchParams(window.location.search);
   var shotMode = params.get('shot') || '';
+  // The screenshot runner passes ?seed=N (shots.json): use it for the
+  // grain pass so a new seed really produces a new render.
+  var seedParam = parseInt(params.get('seed'), 10);
+  if (!isNaN(seedParam)) { state.seed = seedParam; }
 
   var canvas, ctx, statusEl;
 

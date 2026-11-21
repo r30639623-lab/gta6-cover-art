@@ -254,7 +254,10 @@
   // ---------------------------------------------------------------- layouts
   // photos: { hero, plaza, mara, dante } — Image elements (or null).
   // Portrait panels pop out at 1.08; the wide hero stays at 1.0 so no
-  // feet or limbs are ever cropped by the zoom.
+  // feet or limbs are ever cropped by the zoom. The narrow triptych
+  // panels are the exception: they render at 1.0 with the focus
+  // centred on the subject, so a whole face and a whole body fit
+  // inside the thin slice.
   function renderPoster(canvas, opts) {
     var ctx = canvas.getContext('2d');
     var W = canvas.width;
@@ -275,7 +278,7 @@
     ctx.fillStyle = '#160a12';
     ctx.fillRect(0, 0, W, H);
 
-    function photo(img, x, y, w, h, kind) {
+    function photo(img, x, y, w, h, kind, extra) {
       if (!img) {
         ctx.fillStyle = '#2a1420';
         ctx.fillRect(x, y, w, h);
@@ -311,6 +314,11 @@
         o.anchorX = 'center';
         o.anchorY = 'center';
       }
+      // Layout-specific overrides (triptych focus/zoom): applied last
+      // so they win over the kind defaults above.
+      if (extra) {
+        for (var k in extra) { o[k] = extra[k]; }
+      }
       drawCoverImage(ctx, img, x, y, w, h, o);
     }
 
@@ -334,9 +342,14 @@
       drawTitleBlock(ctx, W, 0, heroH - Math.round(H * 0.22), W, text);
     } else if (layout === 'triptych') {
       var third = Math.floor((W - gap * 2) / 3);
-      photo(P.mara, 0, 0, third, H, 'portrait');
+      // Triptych panels are very narrow: at the 1.08x portrait pop-out
+      // the visible window is narrower than Mara's face and Dante's
+      // body, so both render at 1.0x with the focus centred on the
+      // subject — Mara's face (focusX 0.35) and Dante's body
+      // (focusX 0.84, head kept by anchorY 'start').
+      photo(P.mara, 0, 0, third, H, 'portrait', { zoom: 1.0, focusX: 0.35 });
       photo(P.hero, third + gap, 0, third, H, 'hero');
-      photo(P.dante, third * 2 + gap * 2, 0, W - third * 2 - gap * 2, H, 'portrait');
+      photo(P.dante, third * 2 + gap * 2, 0, W - third * 2 - gap * 2, H, 'portrait', { zoom: 1.0, focusX: 0.84, anchorY: 'start' });
       drawScrim(ctx, 0, H * 0.62, W, H * 0.38, 0.42);
       drawRibbon(ctx, W, H, 'DUSK');
       drawTitleBlock(ctx, W, 0, H * 0.68, W, text);

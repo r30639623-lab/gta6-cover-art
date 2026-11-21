@@ -27,15 +27,17 @@ for the sample photos and fonts to load).
   smooth dusk skies grade into clean steps instead of muddy blotches, and a
   seeded grain pass breaks up any remaining banding
 - **Safe crops** — portrait panels pop out at 1.08x, the wide hero stays at
-  1.0x, and heads and feet are clamped inside the frame
+  1.0x, and heads and feet are clamped inside the frame; the narrow
+  triptych panels render at 1.0x with the focus centred on the subject,
+  so a whole face and a whole body fit inside the thin slice
 - **Export PNG** — Poster 1080&times;1350, Square 1080&times;1080, Wide 1920&times;1080, Story 1080&times;1920
 
 ## Sample photos (all freely licensed)
 
 - NYC skyline at dusk &mdash; Joseph Barrientos (CC0)
 - Parque Central, Havana &mdash; Edgardo W. Olivera (CC BY 2.0)
-- Street portrait &mdash; Thomas Leuthard (CC BY 2.0)
-- Man in a trench coat &mdash; conorwithonen (CC BY 2.0)
+- Street portrait &mdash; orange tuesday (CC BY 2.0)
+- Man in a tan suit, Rome &mdash; sidewalk flying (CC BY 2.0)
 
 Fonts: Anton and Pacifico (SIL Open Font License 1.1).
 
